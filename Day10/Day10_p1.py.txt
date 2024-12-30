@@ -1,0 +1,67 @@
+from collections import deque
+
+def parse_map(file_path):
+    """Read the input file and parse it into a grid."""
+    with open("Day10part1_input.txt") as f:
+        grid = [list(map(int, line.strip())) for line in f]
+    return grid
+
+def find_trailheads(grid):
+    """Find all positions with height 0 (trailheads)."""
+    trailheads = []
+    for r in range(len(grid)):
+        for c in range(len(grid[0])):
+            if grid[r][c] == 0:
+                trailheads.append((r, c))
+    return trailheads
+
+def bfs(grid, start):
+    """Perform BFS from the start position to find all reachable 9s."""
+    rows, cols = len(grid), len(grid[0])
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # right, down, left, up
+    queue = deque([start])
+    visited = set()
+    reachable_nines = set()
+
+    while queue:
+        r, c = queue.popleft()
+
+        # Skip already visited cells
+        if (r, c) in visited:
+            continue
+        visited.add((r, c))
+
+        # If we reach a 9, add it to the reachable set
+        if grid[r][c] == 9:
+            reachable_nines.add((r, c))
+
+        # Explore neighbors
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols:
+                # Only move to the neighbor if it's exactly 1 higher
+                if grid[nr][nc] == grid[r][c] + 1:
+                    queue.append((nr, nc))
+
+    return reachable_nines
+
+def calculate_scores(grid):
+    """Calculate the sum of scores for all trailheads."""
+    trailheads = find_trailheads(grid)
+    total_score = 0
+
+    for trailhead in trailheads:
+        reachable_nines = bfs(grid, trailhead)
+        total_score += len(reachable_nines)
+
+    return total_score
+
+if __name__ == "__main__":
+    # Load the map from the input file
+    file_path = "/mnt/data/Day10part1_input.txt"
+    grid = parse_map(file_path)
+
+    # Calculate the sum of trailhead scores
+    total_score = calculate_scores(grid)
+
+    print("The sum of the scores of all trailheads is:", total_score)

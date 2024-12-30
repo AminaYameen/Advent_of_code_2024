@@ -1,0 +1,20 @@
+# Step 1: Parse the input data
+file_path = 'Day1part2_input.txt'
+left_list = []
+right_list = []
+
+with open(file_path, 'r') as f:
+    for line in f:
+        left, right = map(int, line.split())
+        left_list.append(left)
+        right_list.append(right)
+
+# Step 2: Count occurrences of each number in the right list
+from collections import Counter
+right_count = Counter(right_list)
+
+# Step 3: Calculate the similarity score
+similarity_score = sum(num * right_count[num] for num in left_list)
+
+# Step 4: Output the result
+print("Similarity score:", similarity_score)

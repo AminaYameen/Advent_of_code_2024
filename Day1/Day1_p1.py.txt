@@ -1,0 +1,20 @@
+# Step 1: Parse the input data
+file_path = 'advent of code.txt'
+left_list = []
+right_list = []
+
+with open(file_path, 'r') as f:
+    for line in f:
+        left, right = map(int, line.split())
+        left_list.append(left)
+        right_list.append(right)
+
+# Step 2: Sort both lists
+left_list.sort()
+right_list.sort()
+
+# Step 3: Calculate the total distance
+total_distance = sum(abs(left - right) for left, right in zip(left_list, right_list))
+
+# Step 4: Output the result
+print("Total distance between the lists:", total_distance)
